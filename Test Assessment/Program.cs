@@ -11,10 +11,19 @@ namespace Test_Assessment
     {
         static async Task Main(string[] args)
         {
+            var totalAmountOfUploadedField = 0;
+
+            #region Configuration
+            //Path to file with data
             var filePath = @"C:\Users\Shewc\Desktop\testTask\sample-cab-data.csv";
+
+            //Path to file with duplicats
             var outPath = @"C:\Users\Shewc\Desktop\testTask\out-cab-data.csv";
             File.Delete(outPath);
-            int batchSize = 500;
+
+            //Size of batch for reading from CSV
+            int batchSize = 1000;
+            #endregion
 
             IReadOnlyList<TaxiTripWrapper> taxiTripWrappers = [];
             var csvExtractor = new CsvExtractor<TaxiTripWrapper>(filePath);
@@ -22,16 +31,24 @@ namespace Test_Assessment
 
             for (int i = 0; taxiTripWrappers.Count > 0 || i == 0; i++)
             {
+                //Extract data from CSV file
                 taxiTripWrappers = await csvExtractor.ExtractAsync(i * batchSize, batchSize);
+
+                //searching for duplicate
                 var result = await duplicateSearcher.SearchForDuplicateAsync(taxiTripWrappers);
 
+                //writing duplicate in csv file
                 await CsvFileHelper.AppendCsvAsync(result.DuplicatedItems, outPath);
 
+                //creating new connection to db and creating service for uploading data
                 using ApplicationDbContext context = new();
                 var taxiTripService = new TaxiTripService(new TaxiTripRepository(context));
 
-                await taxiTripService.AddAsync(result.UniqItems);
+                var amount = await taxiTripService.AddAsync(result.UniqItems);
+                totalAmountOfUploadedField += amount;
             }
+
+            Console.WriteLine($"Total amount of uploaded fields is: " + totalAmountOfUploadedField);
         }
     }
 }

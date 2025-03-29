@@ -12,25 +12,25 @@ namespace Test_Assessment.CSVLogic
             FilePath = filePath;
         }
 
-        public IReadOnlyList<T> Extract(int offset = 0, int buffer = 500)
+        public async Task<IReadOnlyList<T>> ExtractAsync(int offset = 0, int buffer = 500)
         {
             var list = new List<T>();
 
             using (var reader = new StreamReader(FilePath))
             using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
             {
-                csv.Read();
+                await csv.ReadAsync();
                 csv.ReadHeader();
 
                 for (int i = 0; i < offset; i++)
                 {
-                    csv.Read();
+                    await csv.ReadAsync();
                 }
 
                 for (int i = offset; i < buffer + offset; i++)
                 {
-                    csv.Read();
-                    list.Add(csv.GetRecord<T>());
+                    if(await csv.ReadAsync())
+                        list.Add(csv.GetRecord<T>());
                 }
             }
 

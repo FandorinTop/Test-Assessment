@@ -8,4 +8,11 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Test Assessment.Common.csproj" />
+    <ProjectReference Include="..\CSVLogic\Test Assessment.CSVLogic.csproj" />
+    <ProjectReference Include="..\DataAccess\Test Assessment.DataAccess.csproj" />
+    <ProjectReference Include="..\DbModel\Test Assessment.DbModel.csproj" />
+  </ItemGroup>
+
 </Project>

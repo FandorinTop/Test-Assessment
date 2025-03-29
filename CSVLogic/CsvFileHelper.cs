@@ -25,22 +25,20 @@ namespace Test_Assessment.CSVLogic
                 // Don't write the header again.
                 HasHeaderRecord = false,
             };
-            using (var stream = File.Open(filePath, FileMode.Append))
-            using (var writer = new StreamWriter(stream))
-            using (var csv = new CsvWriter(writer, config))
-            {
-                await csv.WriteRecordsAsync(records);
-            }
+
+            using var stream = File.Open(filePath, FileMode.Append);
+            using var writer = new StreamWriter(stream);
+            using var csv = new CsvWriter(writer, config);
+            await csv.WriteRecordsAsync(records);
         }
 
         private static async Task CreateFileAsync<T>(string filePath, IEnumerable<T> records)
         {
-            using (var writer = new StreamWriter(filePath))
-            using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
-            {
-                csv.WriteHeader<T>();
-                await csv.WriteRecordsAsync(records);
-            }
+            using var writer = new StreamWriter(filePath);
+            using var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
+
+            csv.WriteHeader<T>();
+            await csv.WriteRecordsAsync(records);
         }
     }
 }

@@ -4,15 +4,11 @@ namespace Test_Assessment.Storage
 {
     public class DummyDictionaryStorage<T> : IUniqKeyValueStorage<T>
     {
-        private readonly Dictionary<string, T> totalSetOfDuplicates = new Dictionary<string, T>();
+        private readonly Dictionary<string, T> totalSetOfDuplicates = new();
 
         public Task SetValueAsync(string key, T value)
         {
-            if (!totalSetOfDuplicates.ContainsKey(key))
-            {
-                totalSetOfDuplicates.Add(key, value);
-            }
-            else
+            if (!totalSetOfDuplicates.TryAdd(key, value))
             {
                 totalSetOfDuplicates[key] = value;
             }

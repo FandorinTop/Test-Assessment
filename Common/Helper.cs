@@ -16,7 +16,7 @@
             {
                 "N" => "No",
                 "Y" => "Yes",
-                _ => throw new ArgumentException(nameof(val)),
+                _ => throw new ArgumentException("Flag can have only N/Y values", nameof(val)),
             };
         }
     }

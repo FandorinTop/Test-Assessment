@@ -7,7 +7,7 @@ using Test_Assessment.Wrapper;
 
 namespace Test_Assessment
 {
-    internal class Program
+    internal static class Program
     {
         static async Task Main(string[] args)
         {
@@ -16,7 +16,7 @@ namespace Test_Assessment
             File.Delete(outPath);
             int batchSize = 500;
 
-            IReadOnlyList<TaxiTripWrapper> taxiTripWrappers = new List<TaxiTripWrapper>();
+            IReadOnlyList<TaxiTripWrapper> taxiTripWrappers = [];
             var csvExtractor = new CsvExtractor<TaxiTripWrapper>(filePath);
             var duplicateSearcher = new DuplicateTaxiTripWrapperVerificationService(new DummyDictionaryStorage<int>());
 
@@ -27,12 +27,10 @@ namespace Test_Assessment
 
                 await CsvFileHelper.AppendCsvAsync(result.DuplicatedItems, outPath);
 
-                using(ApplicationDbContext context = new ApplicationDbContext())
-                {
-                    var taxiTripService = new TaxiTripService(new TaxiTripRepository(context));
+                using ApplicationDbContext context = new();
+                var taxiTripService = new TaxiTripService(new TaxiTripRepository(context));
 
-                    await taxiTripService.AddAsync(result.UniqItems);
-                }
+                await taxiTripService.AddAsync(result.UniqItems);
             }
         }
     }

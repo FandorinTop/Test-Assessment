@@ -14,7 +14,7 @@ namespace Test_Assessment.DataAccess
 
         public ApplicationDbContext()
         {
-            Database.EnsureCreated();
+            //Database.EnsureCreated();
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

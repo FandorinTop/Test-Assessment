@@ -1,4 +1,4 @@
-﻿namespace Test_Assessment
+﻿namespace Test_Assessment.Common
 {
     public static class Helper
     {

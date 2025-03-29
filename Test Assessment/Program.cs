@@ -1,4 +1,6 @@
-﻿namespace Test_Assessment
+﻿using System.Security.Cryptography.X509Certificates;
+
+namespace Test_Assessment
 {
     internal class Program
     {
@@ -7,6 +9,4 @@
             Console.WriteLine("Hello, World!");
         }
     }
-
-    public class 
 }
